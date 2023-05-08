@@ -1,0 +1,50 @@
+<resources>
+    <!-- Navigation strings /!-->
+    <string name="app_name">Расписание</string>
+    <string name="Filters_screen">Фильтры</string>
+    <string name="Student_screen">Студент</string>
+    <string name="Student_filter">Фильтр_Студент</string>
+    <string name="Teacher_filter">Фильтр-Учитель</string>
+    <string name="AUDITORY_FILTERS">Фильтр-Аудитория</string>
+    <string name="Teacher_screen">Учитель</string>
+    <string name="Auditory_screen">Аудитория</string>
+    <string name="Subject_screen">Предмет</string>
+    <string name="No_Internet_screen" >Нет интернета</string>
+
+
+    <!-- TimeTable strings /!-->
+    <string name = "lab">Лабораторная работа</string>
+    <string name = "practice"> Практика </string>
+    <string name = "army" > ВУЦ </string>
+    <string name = "lecture"> Лекция </string>
+    <string name = "exam"> Экзамен </string>
+
+    <!-- No internet strings /!-->
+    <string name="NoInternet" > Проверьте подключение к интернету</string>
+
+    <!-- Group strings /!-->
+    <string name = "OutlinedTextFieldHintFaculty">Выберите факультет</string>
+    <string name = "OutlinedTextFieldHintCourse">Выберите курс</string>
+    <string name = "OutlinedTextFieldHintGroup">Выберите группу</string>
+    <string name = "OutlinedTextFieldHintWeek">Выберите неделю</string>
+
+    <!-- Teacher strings /!-->
+    <string name = "OutlinedTextFieldHintFacultyTeacher">Выберите факультет</string>
+    <string name = "OutlinedTextFieldHintCafedraTeacher">Выберите кафедру</string>
+    <string name = "OutlinedTextFieldHintTeacher">Выберите преподавателя</string>
+    <string name = "OutlinedTextFieldHintWeekTeacher">Выберите неделю</string>
+
+    <!-- Auditory strings /!-->
+    <string name = "OutlinedTextFieldHintCorpusAuditory">Выберите корпус</string>
+    <string name = "OutlinedTextFieldHintAuditory">Выберите аудиториб</string>
+    <string name = "OutlinedTextFieldHintWeekAuditory">Выберите неделю</string>
+
+
+    <!-- TeacherScreen strings /!-->
+    <string name="Teacher_Name" >Имя преподавателя</string>
+
+    <!-- Toast Errors /!-->
+    <string name="ErrorEmptyFilters">Не введены фильтры</string>
+
+
+</resources>
