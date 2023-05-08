@@ -37,13 +37,11 @@ class MainViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-
     // Group Filters Save Data
     val faculty = savedStateHandle.getStateFlow("faculty","ФИРТ")
     val course = savedStateHandle.getStateFlow("course","3")
     val week = savedStateHandle.getStateFlow("week","3")
     val group = savedStateHandle.getStateFlow("group","ПРО-329")
-
 
     fun onFacultyChanged(NewValue: String){
         savedStateHandle["faculty"] = NewValue

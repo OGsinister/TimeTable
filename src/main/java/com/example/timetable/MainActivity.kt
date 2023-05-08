@@ -1,6 +1,7 @@
 package com.example.timetable
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -39,10 +40,6 @@ import com.example.timetable.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import java.time.Month
-
-//val mutableStateCurrentGroupName = mutableStateOf(filters.group)
-
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -62,7 +59,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-
+        when(this.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)){
+            Configuration.UI_MODE_NIGHT_NO ->{
+                window.statusBarColor = resources.getColor(R.color.white, null)
+            }
+            else -> {
+                window.statusBarColor = resources.getColor(R.color.black,null)
+            }
+        }
     }
 }
 
@@ -80,7 +84,7 @@ fun NameAppSection(){
     )
     {
         Text(
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colors.onPrimary,
             text = stringResource(id = R.string.app_name),
             style = MaterialTheme.typography.h1,
             fontSize = 22.sp

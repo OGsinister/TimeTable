@@ -5,7 +5,9 @@ import androidx.annotation.RequiresApi
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -23,7 +25,8 @@ import com.example.timetable.viewModel.MainViewModel
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SetupNavGraph(navController: NavHostController, viewModel: MainViewModel){
-    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
+
     NavHost(
         navController = navController,
         startDestination = Screens.STUDENT.route
