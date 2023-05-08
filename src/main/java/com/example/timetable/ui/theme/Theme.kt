@@ -7,15 +7,21 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = ThemeColors.Night.primary,
+    onPrimary = ThemeColors.Night.text,
+    surface =  ThemeColors.Night.surface,
+    background = ThemeColors.Night.background,
+    onSecondary = ThemeColors.Night.onSecondary,
+    onSurface = ThemeColors.Night.calendarSelectedItem
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = ThemeColors.Light.primary,
+    onPrimary = ThemeColors.Light.text,
+    surface =  ThemeColors.Light.surface,
+    background = ThemeColors.Light.background,
+    onSecondary = ThemeColors.Light.onSecondary,
+    onSurface = ThemeColors.Light.calendarSelectedItem
 
     /* Other default colors to override
     background = Color.White,
@@ -28,18 +34,14 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun TimeTableTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
+fun TimeTableTheme(
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit
+) {
     MaterialTheme(
-        colors = colors,
+        colors = if(isDarkTheme) DarkColorPalette else LightColorPalette,
         typography = Typography,
         shapes = Shapes,
         content = content
     )
-
 }

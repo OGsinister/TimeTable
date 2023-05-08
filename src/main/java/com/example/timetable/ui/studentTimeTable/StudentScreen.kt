@@ -19,6 +19,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
@@ -55,7 +56,6 @@ import java.util.*
 
 var filters = Filters
 var isCalendarTextVisible = mutableStateOf(false)
-val stateGroupName = mutableStateOf("")
 
 @OptIn(ExperimentalMaterialApi::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,19 +64,20 @@ val stateGroupName = mutableStateOf("")
 fun StudentScreen(navController: NavHostController, viewModel: MainViewModel) {
 
     val groupTimeTable = viewModel.groupFilters.observeAsState(listOf()).value
-    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Collapsed)
+    val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
 
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
-        drawerShape = RoundedCornerShape(10),
+        drawerShape = RoundedCornerShape(16.dp),
         sheetContent = {
             FiltersScreen(
                 navController = navController,
                 viewModel = viewModel,
-                sheetState = sheetState,)
+                sheetState = sheetState
+            )
     },
-        sheetBackgroundColor = Color.White
+        sheetBackgroundColor = MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier
@@ -123,16 +124,14 @@ fun CurrentDateSection(navController: NavController, sheetState: BottomSheetStat
             Text(
                 text = "${LocalDate.now().dayOfMonth} ${localizedCurrentMonth(localDate = LocalDate.now().month)}",
                 style = TextStyle(
-                    color = SubjectsTextColor,
+                    color = MaterialTheme.colors.onSecondary,
                     fontSize = 16.sp
                 )
             )
             Text(
                 text = groups,
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 30.sp
-                )
+                fontSize = 30.sp,
+                color = MaterialTheme.colors.onPrimary
             )
         }
         Spacer(modifier = Modifier.weight(1f))
@@ -142,12 +141,12 @@ fun CurrentDateSection(navController: NavController, sheetState: BottomSheetStat
         ) {
             Button(
                 shape = RoundedCornerShape(50),
-                colors = ButtonDefaults.buttonColors(),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                 modifier = Modifier
                     .height(60.dp),
                 onClick = {
                     scope.launch {
-                        if(sheetState.isCollapsed) sheetState.expand() else sheetState.collapse()
+                        if(sheetState.isExpanded) sheetState.collapse() else sheetState.expand()
                     }
                 },
             ) {
@@ -184,7 +183,7 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Divider(
-            color = Color.Black
+            color = MaterialTheme.colors.onSecondary
         )
         LazyRow {
             items(items.size) {
@@ -210,7 +209,7 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
                                 )
                             }
                         },
-                    backgroundColor = Color.White
+                    backgroundColor = MaterialTheme.colors.background
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -220,18 +219,19 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
                                 text = calendarElements[it].date,
                                 //text = mutableStateDate.value,
                                 //text = items[it].dayOfTheMonth,
-                                color = if (items[it].isSelected) calendarSelectedItemColor else SubjectsTextColor
+                                color = if(items[it].isSelected) MaterialTheme.colors.onSurface else MaterialTheme.colors.onSecondary
+                                //color = if (items[it].isSelected) calendarSelectedItemColor else SubjectsTextColor
                             )
                             Text(
                                 text = calendarElements[it].day_of_the_week,
                                 //text = items[it].dayOfTheWeek,x
-                                color = if (items[it].isSelected) calendarSelectedItemColor else Color.Black
+                                color = if (items[it].isSelected) MaterialTheme.colors.onSurface else MaterialTheme.colors.onSecondary
                             )
                             Divider(
                                 modifier = Modifier
                                     .fillMaxWidth(),
                                 thickness = 2.dp,
-                                color = if (items[it].isSelected) calendarSelectedItemColor else Color.White
+                                color = if (items[it].isSelected) MaterialTheme.colors.onSurface else MaterialTheme.colors.onSecondary
                             )
                         }
                     }
@@ -239,7 +239,7 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
             }
         }
         Divider(
-            color = Color.Black
+            color = MaterialTheme.colors.onSecondary
         )
     }
 
@@ -295,7 +295,6 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(30.dp)
         ){
             Column(){
@@ -306,7 +305,7 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
                     Column() {
                         Text(
                             text = "Фильтры группы",
-                            color = Color.Black,
+                            color = MaterialTheme.colors.surface,
                             fontSize = 15.sp
                         )
 
@@ -335,6 +334,8 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
                     }
                 }
             }
+            
+            Spacer(modifier = Modifier.padding(10.dp))
 
             Column(
                 modifier = Modifier
@@ -355,7 +356,7 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
                             sheetState.collapse()
                         } //navController.navigate(Screens.STUDENT.route)
                     },
-                    colors = ButtonDefaults.buttonColors(Color.Green)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)
                 ) {
                     Text(text = "Сохранить")
                 }
