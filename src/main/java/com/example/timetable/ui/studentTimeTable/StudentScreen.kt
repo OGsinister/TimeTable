@@ -14,7 +14,6 @@ import androidx.compose.material.BottomSheetScaffold
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Button
-import androidx.compose.material.ButtonColors
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
@@ -27,29 +26,19 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.timetable.GetOutlinedTextField
-import com.example.timetable.R
 import com.example.timetable.data.model.CalendarTimeTable
 import com.example.timetable.data.model.Filters
 import com.example.timetable.localizedCurrentMonth
-import com.example.timetable.navigation.Screens
-import com.example.timetable.ui.displayErrors.displayError
 import com.example.timetable.ui.theme.*
 import com.example.timetable.viewModel.MainViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.*
@@ -164,8 +153,8 @@ fun CurrentDateSection(navController: NavController, sheetState: BottomSheetStat
 fun WeeklyCalendarSection(viewModel: MainViewModel) {
     val weeks = viewModel.week.value
     val group = viewModel.group.value
-
     val calendarElements = viewModel.calendarElements
+    val currentDay = viewModel.currentDay.value
 
     var items by remember {
         mutableStateOf(
@@ -198,14 +187,13 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
                             }
 
                             filters.currentDay = items[it].dayOfTheWeek.toString()
+                            viewModel.onDayChanged(calendarElements[it].day_of_the_week)
 
                             viewModel.viewModelScope.launch(Dispatchers.IO) {
                                 viewModel.sendGroupFilters(
                                     group,
                                     weeks,
-                                    //filters.group,
-                                    //filters.week,
-                                    calendarElements[it].day_of_the_week
+                                    currentDay
                                 )
                             }
                         },

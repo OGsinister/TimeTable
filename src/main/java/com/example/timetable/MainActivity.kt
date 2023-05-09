@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
         super.onResume()
         when(this.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)){
             Configuration.UI_MODE_NIGHT_NO ->{
-                window.statusBarColor = resources.getColor(R.color.white, null)
+                window.statusBarColor = resources.getColor(R.color.purple_700, null)
             }
             else -> {
                 window.statusBarColor = resources.getColor(R.color.black,null)

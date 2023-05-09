@@ -51,7 +51,7 @@ sealed class ThemeColors(
 ){
     @SuppressLint("InvalidColorHexValue")
     object Night: ThemeColors(
-        background = Color(0xFF000000),
+        background = Color(0xFF2C2A2A),
         surface = Color(0xFF873CC7),
         primary = Color(0xFF6200ed),
         text = Color(0xFF4FB64C),
@@ -60,7 +60,7 @@ sealed class ThemeColors(
     )
     @SuppressLint("InvalidColorHexValue")
     object Light: ThemeColors(
-        background = Color(0xFFfafafa),
+        background = Color(0xFFFFFFFF),
         surface = Color(0xFF3700B3),
         primary = Color(0xFF6200ed),
         text = Color(0xFF72cfc4),

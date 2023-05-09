@@ -114,10 +114,9 @@ class CurrentSubjectTeacher @Inject constructor(private val responseTeacherTimeT
         else -> {doneTextSubjectColor}
     }
 
-
     @RequiresApi(Build.VERSION_CODES.O)
     @Composable
-    fun getIsCurrentSubject(responseTeacherTimeTable: ResponseTeacherTimeTable): Boolean{
+    fun getIsCurrentSubject(): Boolean{
         return currentTime in startSubject..endSubject
     }
 }

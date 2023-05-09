@@ -32,7 +32,6 @@ import com.example.timetable.localizedCurrentMonth
 import com.example.timetable.ui.auditoryTimeTable.AuditoryTimeTableListItem
 import com.example.timetable.ui.displayErrors.displayError
 import com.example.timetable.ui.studentTimeTable.filters
-import com.example.timetable.ui.studentTimeTable.isCalendarTextVisible
 import com.example.timetable.ui.theme.SubjectsTextColor
 import com.example.timetable.ui.theme.calendarSelectedItemColor
 import com.example.timetable.viewModel.MainViewModel

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,48 +11,29 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
-import com.example.timetable.GetOutlinedTextField
 import com.example.timetable.R
 import com.example.timetable.data.model.CalendarTimeTable
-import com.example.timetable.data.model.CurrentSelectedItem
-import com.example.timetable.data.model.Filters
 import com.example.timetable.data.model.FiltersTeacher
 import com.example.timetable.localizedCurrentMonth
-import com.example.timetable.navigation.Screens
-import com.example.timetable.ui.displayErrors.displayError
-import com.example.timetable.ui.studentTimeTable.CurrentDateSection
-import com.example.timetable.ui.studentTimeTable.TimeTableListItem
-import com.example.timetable.ui.studentTimeTable.WeeklyCalendarSection
-import com.example.timetable.ui.studentTimeTable.filters
 import com.example.timetable.ui.theme.SubjectsTextColor
 import com.example.timetable.ui.theme.calendarSelectedItemColor
 import com.example.timetable.viewModel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.Month
 import java.util.*
 
 var filtersTeacher = FiltersTeacher
@@ -166,7 +146,7 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
     val facultyTeacher = viewModel.facultyTeacher.value
     val cafedraTeacher = viewModel.cafedraTeacher.value
     val weekTeacher = viewModel.weekTeacher.value
-    val teacherName = viewModel.teacher.value
+    val teacherName = viewModel.teacher.collectAsState().value
 
     var items by remember {
         mutableStateOf(
@@ -202,7 +182,6 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
 
                             viewModel.viewModelScope.launch(Dispatchers.IO) {
                                 viewModel.sendTeacherFilters(
-                                    facultyTeacher,
                                     cafedraTeacher,
                                     teacherName,
                                     weekTeacher,
@@ -245,11 +224,11 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel, sheetState: BottomSheetState){
+
     var context = LocalContext.current
-    val filtersMessage = stringResource(id = R.string.ErrorEmptyFilters)
     var facultyList: List<String> = listOf("Не выбрано")
     var cafedraList: List<String> = listOf("Не выбрано")
-    var teacherList: List<String> = listOf("Не выбрано")
+    var teacherList: List<String> = listOf("")
     var weekList: List<String> = listOf("Не выбрано")
 
     val facultyTeacher = viewModel.facultyTeacher.collectAsState().value
@@ -262,13 +241,23 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
     val loadedFilters = viewModel.loadedTeacherFilters.observeAsState(listOf()).value
 
     val loadedTeacherFromFilters = viewModel.daysOfWeek.observeAsState(listOf()).value
+    val loadedFacultyTeacherFilter = viewModel.loadedFacultyFiltersTeacher.observeAsState().value
+    val loadedTeacherNames = viewModel.teacherFromFilters.observeAsState().value
 
     viewModel.viewModelScope.launch(Dispatchers.IO) {
-        viewModel.getFiltersFacultyCafedraWeek()
+        viewModel.getFilterFacultyTeacher()
+    }
+
+    viewModel.viewModelScope.launch(Dispatchers.IO) {
+        viewModel.getFiltersCafedraWeek(facultyTeacher)
     }
 
     viewModel.viewModelScope.launch(Dispatchers.IO) {
         viewModel.getDaysOfWeek(weeksTeacher)
+    }
+
+    loadedFacultyTeacherFilter?.forEach {
+        facultyList = it.faculty
     }
 
     loadedFilters.forEach{ it ->
@@ -276,8 +265,16 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
         weekList = it.week
     }
 
+    viewModel.viewModelScope.launch(Dispatchers.IO) {
+        viewModel.teacherByFilter(facultyTeacher,cafedraTeacher)
+    }
+
+    loadedTeacherNames?.forEach {
+        teacherList = it.teacherName
+    }
+
     result.forEach {
-        Log.d("checkData", "ID: ${it.startSubject}")
+        Log.d("checkDataTimeTable", "ID: ${it.startSubject}")
     }
 
     Column(
@@ -316,7 +313,6 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
                         getOutlinedTextFieldWeekTeacher(list = weekList, viewModel = viewModel)
                         //filtersTeacher.week = GetOutlinedTextField(weekList, "Введите неделю", "Week", "Teacher")
                     }
-                    viewModel.teacherByFilter(facultyTeacher, cafedraTeacher)
 
                     loadedTeacherFromFilters.forEach{ calendar ->
                         viewModel.addElementTeacherFromServer(calendar)

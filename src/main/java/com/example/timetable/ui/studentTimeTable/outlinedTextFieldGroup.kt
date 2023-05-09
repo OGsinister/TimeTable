@@ -17,24 +17,19 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.timetable.R
-import com.example.timetable.ui.filtersAuditory
-import com.example.timetable.ui.teacherTimeTable.filtersTeacher
-import com.example.timetable.viewModel.GroupFiltersViewModel
 import com.example.timetable.viewModel.MainViewModel
 
 @Composable
@@ -42,6 +37,7 @@ fun getOutlinedTextFieldGroup(list: List<String>, viewModel: MainViewModel): Str
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var group = viewModel.group.collectAsStateWithLifecycle().value
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -55,8 +51,8 @@ fun getOutlinedTextFieldGroup(list: List<String>, viewModel: MainViewModel): Str
             .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = group,
+            onValueChange = {group = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.onPrimary,
@@ -114,6 +110,7 @@ fun getOutlinedTextFieldWeek(list: List<String>, viewModel: MainViewModel): Stri
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var week = viewModel.week.collectAsStateWithLifecycle().value
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -127,8 +124,8 @@ fun getOutlinedTextFieldWeek(list: List<String>, viewModel: MainViewModel): Stri
             .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = week,
+            onValueChange = {week = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.onPrimary,
@@ -186,6 +183,8 @@ fun getOutlinedTextFieldFaculty(list: List<String>, viewModel: MainViewModel): S
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
 
+    var faculty = viewModel.faculty.collectAsStateWithLifecycle().value
+
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
     }else{
@@ -198,8 +197,8 @@ fun getOutlinedTextFieldFaculty(list: List<String>, viewModel: MainViewModel): S
             .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = faculty,
+            onValueChange = {faculty = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.onPrimary,
@@ -257,6 +256,7 @@ fun getOutlinedTextFieldCourse(list: List<String>, viewModel: MainViewModel): St
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var course = viewModel.course.collectAsStateWithLifecycle().value
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -270,8 +270,8 @@ fun getOutlinedTextFieldCourse(list: List<String>, viewModel: MainViewModel): St
             .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = course,
+            onValueChange = {course = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.onPrimary,

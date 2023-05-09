@@ -27,7 +27,6 @@ import com.example.timetable.R
 import com.example.timetable.navigation.Screens
 import com.example.timetable.ui.displayErrors.displayError
 import com.example.timetable.ui.studentTimeTable.filters
-import com.example.timetable.ui.studentTimeTable.isCalendarTextVisible
 import com.example.timetable.ui.teacherTimeTable.filtersTeacher
 import com.example.timetable.viewModel.MainViewModel
 import kotlinx.coroutines.Dispatchers

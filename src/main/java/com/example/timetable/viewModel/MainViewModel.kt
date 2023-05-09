@@ -1,11 +1,7 @@
 package com.example.timetable.viewModel
 
 import android.util.Log
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,6 +12,7 @@ import com.example.timetable.data.model.ResponseAuditoryFilters
 import com.example.timetable.data.model.ResponseAuditoryTimeTable
 import com.example.timetable.data.model.ResponseDaysOfWeek
 import com.example.timetable.data.model.ResponseGroupFilters
+import com.example.timetable.data.model.ResponseTeacherFaculty
 import com.example.timetable.data.model.ResponseTeacherFilters
 import com.example.timetable.data.model.ResponseTeacherTimeTable
 import com.example.timetable.data.model.ResponseTimeTableGroup
@@ -24,9 +21,6 @@ import com.example.timetable.data.model.TodosItem
 import com.example.timetable.data.network.ApiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
@@ -42,7 +36,7 @@ class MainViewModel @Inject constructor(
     val course = savedStateHandle.getStateFlow("course","3")
     val week = savedStateHandle.getStateFlow("week","3")
     val group = savedStateHandle.getStateFlow("group","ПРО-329")
-
+    val currentDay = savedStateHandle.getStateFlow("day","Пн")
     fun onFacultyChanged(NewValue: String){
         savedStateHandle["faculty"] = NewValue
     }
@@ -59,11 +53,15 @@ class MainViewModel @Inject constructor(
         savedStateHandle["group"] = NewValue
     }
 
+    fun onDayChanged(NewValue: String){
+        savedStateHandle["day"] = NewValue
+    }
+
     // Teacher Filters Save Data
     val facultyTeacher = savedStateHandle.getStateFlow("facultyTeacher","ФИРТ")
-    val cafedraTeacher = savedStateHandle.getStateFlow("cafedraTeacher","3")
+    val cafedraTeacher = savedStateHandle.getStateFlow("cafedraTeacher","ВМиК")
     val weekTeacher = savedStateHandle.getStateFlow("weekTeacher","3")
-    val teacher = savedStateHandle.getStateFlow("groupTeacher","ПРО-329")
+    val teacher = savedStateHandle.getStateFlow("teacher","")
 
     fun onFacultyChangedTeacher(NewValue: String){
         savedStateHandle["facultyTeacher"] = NewValue
@@ -78,7 +76,7 @@ class MainViewModel @Inject constructor(
     }
 
     fun onTeacherNameChangedTeacher(NewValue: String){
-        savedStateHandle["groupTeacher"] = NewValue
+        savedStateHandle["teacher"] = NewValue
     }
 
     // Auditory Filters Save Data
@@ -97,11 +95,6 @@ class MainViewModel @Inject constructor(
     fun onWeekChangedAuditory(NewValue: String){
         savedStateHandle["weekAuditory"] = NewValue
     }
-
-
-
-
-
 
 
     val _calendarElements = mutableStateListOf<ResponseDaysOfWeek>()
@@ -174,6 +167,10 @@ class MainViewModel @Inject constructor(
     val loadedTeacherFilters: MutableLiveData<List<ResponseTeacherFilters>>
         get() = _loadedTeacherFilters
 
+    val _loadedFacultyFiltersTeacher = MutableLiveData<List<ResponseTeacherFaculty>>()
+    val loadedFacultyFiltersTeacher: MutableLiveData<List<ResponseTeacherFaculty>>
+        get() = _loadedFacultyFiltersTeacher
+
     private val _loadedAuditoryFilters = MutableLiveData<List<ResponseAuditoryFilters>>()
     val loadedAuditoryFilters: MutableLiveData<List<ResponseAuditoryFilters>>
         get() = _loadedAuditoryFilters
@@ -226,18 +223,18 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun sendTeacherFilters(faculty: String, cafedra: String, teacherName: String, week: String, chosenDay: String){
+    fun sendTeacherFilters(cafedra: String, teacherName: String, week: String, chosenDay: String){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.sendTeacherFilters(faculty, cafedra, teacherName, week, chosenDay).let {
+            repository.sendTeacherFilters(cafedra, teacherName, week, chosenDay).let {
                 if(it.isSuccessful){
                     try {
                         teacherTimeTable.postValue(it.body())
-                        Log.d("checkssss", "Load ->: ${it.body().toString()}")
+                        Log.d("checkssssTimeTable", "Load ->: ${it.body().toString()}")
                     }catch (e: IOException){
                         Log.d("Error", "Failed to load product: ${e.message.toString()}")
                     }
                 }else{
-                    Log.d("checkData", "Failed to load product: ${it.errorBody()}")
+                    Log.d("checkDataTimeTable", "Failed to load product: ${it.errorBody()}")
                 }
             }
         }
@@ -325,9 +322,23 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun getFiltersFacultyCafedraWeek(){
+    fun getFilterFacultyTeacher(){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getFilterCafedraWeek().let {
+            repository.getFilterFacultyTeacher().let{
+                if(it.isSuccessful){
+                    try {
+                        loadedFacultyFiltersTeacher.postValue(it.body())
+                    }catch (e: IOException){}
+                }else{
+                    Log.d("ffffff", "Failed to load ...: ${it.errorBody()}")
+                }
+            }
+        }
+    }
+
+    fun getFiltersCafedraWeek(faculty: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getFilterCafedraWeek(faculty).let {
                 if(it.isSuccessful){
                     try {
                         loadedTeacherFilters.postValue(it.body())
