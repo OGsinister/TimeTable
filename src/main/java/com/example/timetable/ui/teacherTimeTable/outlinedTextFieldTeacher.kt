@@ -1,5 +1,6 @@
 package com.example.timetable.ui.teacherTimeTable
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -29,6 +30,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.timetable.R
 import com.example.timetable.viewModel.MainViewModel
 
@@ -37,6 +39,8 @@ fun getOutlinedTextFieldTeacher(list: List<String>, viewModel: MainViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+
+    var teacher = viewModel.teacher.collectAsStateWithLifecycle().value
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -50,8 +54,8 @@ fun getOutlinedTextFieldTeacher(list: List<String>, viewModel: MainViewModel) {
             .background(Color.Gray)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = teacher,
+            onValueChange = {teacher = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -69,7 +73,7 @@ fun getOutlinedTextFieldTeacher(list: List<String>, viewModel: MainViewModel) {
                 },
             label = {
                 Text(
-                    text = stringResource(id = R.string.OutlinedTextFieldHintWeekTeacher),
+                    text = stringResource(id = R.string.OutlinedTextFieldHintTeacher),
                     color = MaterialTheme.colors.primary
                 ) },
             trailingIcon = {
@@ -92,6 +96,7 @@ fun getOutlinedTextFieldTeacher(list: List<String>, viewModel: MainViewModel) {
             list.forEach{
                 DropdownMenuItem(onClick = {
                     selectedItem = it
+                    Log.d("testTeacher", selectedItem)
                     viewModel.onTeacherNameChangedTeacher(selectedItem)
                     expanded = false
                 }) {
@@ -107,6 +112,8 @@ fun getOutlinedTextFieldCafedra(list: List<String>, viewModel: MainViewModel) {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var cafedra = viewModel.cafedraTeacher.collectAsStateWithLifecycle().value
+
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -120,8 +127,8 @@ fun getOutlinedTextFieldCafedra(list: List<String>, viewModel: MainViewModel) {
             .background(Color.Gray)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = cafedra,
+            onValueChange = {cafedra = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -177,6 +184,8 @@ fun getOutlinedTextFieldFacultyTeacher(list: List<String>, viewModel: MainViewMo
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var faculty = viewModel.facultyTeacher.collectAsStateWithLifecycle().value
+
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -190,8 +199,8 @@ fun getOutlinedTextFieldFacultyTeacher(list: List<String>, viewModel: MainViewMo
             .background(Color.Gray)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = faculty,
+            onValueChange = {faculty = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,
@@ -247,6 +256,7 @@ fun getOutlinedTextFieldWeekTeacher(list: List<String>, viewModel: MainViewModel
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf("") }
     var textFieldSize by remember { mutableStateOf(Size.Zero) }
+    var week = viewModel.weekTeacher.collectAsStateWithLifecycle().value
 
     val icon = if(expanded){
         Icons.Filled.KeyboardArrowUp
@@ -260,8 +270,8 @@ fun getOutlinedTextFieldWeekTeacher(list: List<String>, viewModel: MainViewModel
             .background(Color.Gray)
     ) {
         OutlinedTextField(
-            value = selectedItem,
-            onValueChange = {selectedItem = it},
+            value = week,
+            onValueChange = {week = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Gray,

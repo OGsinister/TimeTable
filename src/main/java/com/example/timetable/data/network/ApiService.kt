@@ -28,14 +28,13 @@ suspend fun sendGroupFilters(
     @Query("day_of_the_week") day_of_the_week: String,
 ): Response<List<ResponseTimeTableGroup>>
 
-@GET("teacher")
+@GET("scheduleTeacherForADay")
 @Headers("Content-Type: application/json")
 suspend fun sendTeacherFilters(
-    @Query("faculty") faculty: String,
     @Query("cafedra") cafedra: String,
     @Query("teacherName") teacherName: String,
     @Query("week") week: String,
-    @Query("chosenDay") chosenDay: String,
+    @Query("day_of_the_week") chosenDay: String,
 ): Response<List<ResponseTeacherTimeTable>>
 
 @GET("auditory")
@@ -64,21 +63,23 @@ suspend fun groupByFilter(
 @GET("getFilterFacultyCourseWeek")
 suspend fun getFilterFacultyCourseWeek(): Response<List<ResponseGroupFilters>>
 
-// Teacher
+// ---------------------------------------Teacher---------------------------------------------------
 @GET("getFilterFacultyTeacher")
 suspend fun getFilterFacultyTeacher(): Response<List<ResponseTeacherFaculty>>
 
-@GET("getFiltersCafedraWeekTeacher")
-suspend fun getCafedraWeek(): Response<List<ResponseTeacherFilters>>
+@GET("getFiltersCafedraWeek")
+suspend fun getCafedraWeek(
+    @Query("faculty") faculty: String
+): Response<List<ResponseTeacherFilters>>
 
-@GET("teacherByFilter")
+@GET("getTeacherByFilter")
 @Headers("Content-Type: application/json")
 suspend fun teacherByFilter(
     @Query("faculty") faulty: String,
     @Query("cafedra") cafedra: String
 ): Response<List<TeacherFiltersFromAPI>>
 
-// Auditory
+// ---------------------------------------Auditory
 @GET("getAllFiltersAuditory")
 suspend fun getAllFiltersAuditory(): Response<List<ResponseAuditoryFilters>>
 

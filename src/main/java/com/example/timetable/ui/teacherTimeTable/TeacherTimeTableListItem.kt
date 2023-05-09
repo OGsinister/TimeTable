@@ -20,14 +20,209 @@ import androidx.core.graphics.toColor
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.timetable.R
+import com.example.timetable.data.model.CurrentSubjectGroup
 import com.example.timetable.data.model.CurrentSubjectTeacher
 import com.example.timetable.data.model.ResponseTeacherTimeTable
+import com.example.timetable.data.model.ResponseTimeTableGroup
+import com.example.timetable.navigation.Screens
 import com.example.timetable.ui.theme.*
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TeacherTimeTableListItem(responseTeacherTimeTable: ResponseTeacherTimeTable, navController: NavController) {
+    val currentSubject = CurrentSubjectTeacher(responseTeacherTimeTable = responseTeacherTimeTable)
 
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.Top,
+            modifier = Modifier
+                .width(80.dp)
+                .height(200.dp)
+                .padding(start = 5.dp)
+        ) {
+            Column(
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.Top,
+                modifier = Modifier
+                    .padding(5.dp)
+            ) {
+                Text(
+                    text = responseTeacherTimeTable.startSubject,
+                    style = MaterialTheme.typography.body1
+                )
+                Spacer(modifier = Modifier.padding(3.dp))
+                Text(
+                    text = responseTeacherTimeTable.endSubject,
+                    style = MaterialTheme.typography.body1,
+                    color = SubjectsTextColor
+                )
+            }
+            Column(
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier
+                    .padding(5.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .height(20.dp)
+                ) {
+                    RadioButton(
+                        colors = if (currentSubject.getIsCurrentSubject()) RadioButtonDefaults.colors(
+                            Color.Blue
+                        ) else RadioButtonDefaults.colors(Color.Gray),
+                        selected = currentSubject.getIsCurrentSubject(),
+                        onClick = {}
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .padding(5.dp)
+                ) {
+                    Divider(
+                        color = currentSubject.colorPrevAndNextSubject(doneSubjectColor, lineColor),
+                        //color = if(getIsCurrentSubject(timeTable = timeTable)) lineColor else doneSubjectColor,
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .width(2.5.dp)
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
+            @Composable
+            fun getSubjectColor(responseTeacherTimeTable: ResponseTeacherTimeTable) = when(responseTeacherTimeTable.lessonType){
+                "Lecture" -> lectureColor
+                "Practice" -> practiceColor
+                "Exam" -> examColor
+                "Lab" -> labColor
+                else -> { armyColor }
+            }
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+                    .height(150.dp)
+                    .clip(RoundedCornerShape(20.dp))
+                    .clickable {},
+                backgroundColor = currentSubject.colorPrevAndNextSubject(doneSubjectColor, getSubjectColor(responseTeacherTimeTable))
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = responseTeacherTimeTable.lessonType.toString(),
+                            color = currentSubject.colorPrevAndNextSubject(
+                                doneTextSubjectColor,
+                                currentSubjectColor
+                            ),
+                            style = currentSubject.isPrevOrNextSubject()
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = responseTeacherTimeTable.classRoom.toString(),
+                            color = currentSubject.colorPrevAndNextSubject(
+                                doneTextSubjectColor,
+                                currentSubjectColor
+                            ),
+                            style = currentSubject.isPrevOrNextSubject(),
+                            fontFamily = FontFamily(Font(R.font.source_serif_bold)),
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate(
+                                        responseTeacherTimeTable.classRoom.let{
+                                            Screens.AUDITORY.withArgs(it)
+                                        }
+                                    )
+                                }
+                        )
+                    }
+                    Spacer(modifier = Modifier.padding(5.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = responseTeacherTimeTable.lessonName,
+                                    color = if (responseTeacherTimeTable.classRoom == "") Color.White else currentSubject.colorPrevAndNextSubject(
+                                        doneTextSubjectColor,
+                                        currentSubjectColor
+                                    ),
+                                    style = currentSubject.isPrevOrNextSubject(),
+                                    fontFamily = FontFamily(Font(R.font.source_serif_light)),
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 18.sp
+                                )
+                            }
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth()
+                            ) {
+                                Text(
+                                    text = responseTeacherTimeTable.groupName,
+                                    fontFamily = FontFamily(Font(R.font.source_serif_regular)),
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 15.sp,
+                                    color = currentSubject.colorPrevAndNextSubject(
+                                        doneTextSubjectColor,
+                                        currentSubjectColor
+                                    ),
+                                    //color = if(currentSubject.getIsCurrentSubject(responseTimeTableGroup)) currentSubjectColor else doneSubjectColor,
+                                    style = currentSubject.isPrevOrNextSubject()
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+/*
+
+
+
+
+
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun TeacherTimeTableListItem(responseTeacherTimeTable: ResponseTeacherTimeTable, navController: NavController) {
     val currentSubject = CurrentSubjectTeacher(responseTeacherTimeTable = responseTeacherTimeTable)
 
     Row(
@@ -217,3 +412,4 @@ fun convertToColor(value: String): android.graphics.Color {
 fun getColor(value: String): Int {
     return value.toColorInt()
 }
+*/
