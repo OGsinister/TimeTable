@@ -69,7 +69,11 @@ fun SetupNavGraph(navController: NavHostController, viewModel: MainViewModel){
             }
         }
 
-        composable(
+        composable(route = Screens.AUDITORY.route){
+            AuditoryScreen(navController = navController, viewModel = viewModel)
+        }
+        
+       /* composable(
             route = Screens.AUDITORY.route + "/{auditoryName}",
             arguments = listOf(
                 navArgument("auditoryName"){
@@ -82,7 +86,7 @@ fun SetupNavGraph(navController: NavHostController, viewModel: MainViewModel){
             backStackEntry.arguments?.getString("auditoryName")?.let{
                 AuditoryScreen(navController = navController, viewModel = viewModel, auditoryName = it)
             }
-        }
+        }*/
 
         composable(route = Screens.NO_INTERNET.route){
             NoInternetScreen(navController = navController, viewModel = viewModel)

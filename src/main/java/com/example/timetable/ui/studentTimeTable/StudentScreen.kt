@@ -26,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.timetable.R
 import com.example.timetable.data.model.CalendarTimeTable
 import com.example.timetable.data.model.Filters
 import com.example.timetable.localizedCurrentMonth
@@ -139,7 +141,7 @@ fun CurrentDateSection(navController: NavController, sheetState: BottomSheetStat
                     }
                 },
             ) {
-                Text(text = "Изменить")
+                Text(text = stringResource(id = R.string.ButtonText))
             }
         }
     }
@@ -151,10 +153,10 @@ fun CurrentDateSection(navController: NavController, sheetState: BottomSheetStat
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeeklyCalendarSection(viewModel: MainViewModel) {
-    val weeks = viewModel.week.value
-    val group = viewModel.group.value
+    val weeks = viewModel.week.collectAsState().value
+    val group = viewModel.group.collectAsState().value
     val calendarElements = viewModel.calendarElements
-    val currentDay = viewModel.currentDay.value
+    val currentDay = viewModel.currentDay.collectAsState().value
 
     var items by remember {
         mutableStateOf(
@@ -188,6 +190,7 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
 
                             filters.currentDay = items[it].dayOfTheWeek.toString()
                             viewModel.onDayChanged(calendarElements[it].day_of_the_week)
+                            Log.d("CHECKStudent", "$weeks $group $currentDay")
 
                             viewModel.viewModelScope.launch(Dispatchers.IO) {
                                 viewModel.sendGroupFilters(
@@ -292,7 +295,7 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
                 ) {
                     Column() {
                         Text(
-                            text = "Фильтры группы",
+                            text = stringResource(id = R.string.filterText),
                             color = MaterialTheme.colors.surface,
                             fontSize = 15.sp
                         )
@@ -346,7 +349,7 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)
                 ) {
-                    Text(text = "Сохранить")
+                    Text(text = stringResource(id = R.string.saveButton))
                 }
             }
         }

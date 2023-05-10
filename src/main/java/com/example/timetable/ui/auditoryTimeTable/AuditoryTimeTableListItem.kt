@@ -107,7 +107,7 @@ fun AuditoryTimeTableListItem(responseAuditoryTimeTable: ResponseAuditoryTimeTab
                 .fillMaxWidth()
         ) {
             @Composable
-            fun getSubjectColor(responseAuditoryTimeTable: ResponseAuditoryTimeTable) = when(responseAuditoryTimeTable.lessonTypeColor){
+            fun getSubjectColor(responseAuditoryTimeTable: ResponseAuditoryTimeTable) = when(responseAuditoryTimeTable.lessonType){
                 "Lecture" -> lectureColor
                 "Practice" -> practiceColor
                 "Exam" -> examColor
@@ -116,7 +116,7 @@ fun AuditoryTimeTableListItem(responseAuditoryTimeTable: ResponseAuditoryTimeTab
                     armyColor}
             }
 
-            responseAuditoryTimeTable.lessonTypeColor.let {
+            responseAuditoryTimeTable.lessonType.let {
                 currentSubject.colorPrevAndNextSubject(doneSubjectColor, getSubjectColor(responseAuditoryTimeTable = responseAuditoryTimeTable))?.let {
                     Card(
                         modifier = Modifier

@@ -23,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.timetable.NameAppSection
 import com.example.timetable.R
 import com.example.timetable.viewModel.MainViewModel
+import java.util.Locale
 
 @Composable
 fun BottomNavBar(
@@ -68,23 +69,25 @@ fun BottomNavBar(
 @Composable
 fun getNavigation(viewModel: MainViewModel){
     val navController = rememberNavController()
+    val currentLang = Locale.getDefault().language
+
     Scaffold(
         bottomBar = {
             BottomNavBar(
                 items = listOf(
                     BottomNavItem(
-                        name = stringResource(id = R.string.Student_screen),
+                        name = if(currentLang == "en") "Group" else stringResource(id = R.string.Student_screen),
                         route = stringResource(id = R.string.Student_screen),
                         icon = Icons.Default.Edit
                     ),
                     BottomNavItem(
-                        name = stringResource(id = R.string.Teacher_screen),
+                        name = if(currentLang == "en") "Teacher" else stringResource(id = R.string.Teacher_screen),
                         route = stringResource(id = R.string.Teacher_screen) + "/{teacherName}",
                         icon = Icons.Default.Person
                     ),
                     BottomNavItem(
-                        name = stringResource(id = R.string.Auditory_screen),
-                        route = stringResource(id = R.string.Auditory_screen) + "/{auditoryName}",
+                        name = if(currentLang == "en") "Auditory" else stringResource(id = R.string.Auditory_screen),
+                        route = stringResource(id = R.string.Auditory_screen),
                         icon = Icons.Default.List
                     )
                 ),

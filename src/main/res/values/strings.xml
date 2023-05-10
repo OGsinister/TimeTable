@@ -1,12 +1,12 @@
 <resources>
     <!-- Navigation strings /!-->
     <string name="app_name">Расписание</string>
-    <string name="Filters_screen">Фильтры</string>
-    <string name="Student_screen">Студент</string>
+    <string name="Filters_screen" translatable="false">Фильтры</string>
+    <string name="Student_screen">Группа</string>
     <string name="Student_filter">Фильтр_Студент</string>
     <string name="Teacher_filter">Фильтр-Учитель</string>
     <string name="AUDITORY_FILTERS">Фильтр-Аудитория</string>
-    <string name="Teacher_screen">Учитель</string>
+    <string name="Teacher_screen">Преподаватель</string>
     <string name="Auditory_screen">Аудитория</string>
     <string name="Subject_screen">Предмет</string>
     <string name="No_Internet_screen" >Нет интернета</string>
@@ -46,5 +46,22 @@
     <!-- Toast Errors /!-->
     <string name="ErrorEmptyFilters">Не введены фильтры</string>
 
+    <!-- Button Text /!-->
+    <string name="ButtonText">Изменить</string>
 
+    <string name="filterText">Фильтры группы</string>
+    <string name="filterTeacherText">Фильтры преподавателя</string>
+    <string name="filterAuditoryText">Фильтры аудитории</string>
+
+    <string name="saveButton">Сохранить</string>
+
+    <string name="bottomNavGroup">Группа</string>
+    <string name="bottomNavTeacher">Преподаватель</string>
+    <string name="bottomNavAuditory">Аудитория</string>
+
+    <!-- Student default /!-->
+    <string name="defaultGroupValueGroup">ПРО-329</string>
+    <string name="defaultFacultyValueGroup">ФИРТ</string>
+    <string name="defaultWeekValueGroup">3</string>
+    <string name="defaultCourseValueGroup">3</string>
 </resources>

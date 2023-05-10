@@ -143,10 +143,10 @@ fun CurrentDateSectionTeacher(navController: NavController, viewModel: MainViewM
 @Composable
 fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
     val calendarElementsTeacher = viewModel.calendarElementsTeacher
-    val facultyTeacher = viewModel.facultyTeacher.value
-    val cafedraTeacher = viewModel.cafedraTeacher.value
-    val weekTeacher = viewModel.weekTeacher.value
+    val cafedraTeacher = viewModel.cafedraTeacher.collectAsState().value
+    val weekTeacher = viewModel.weekTeacher.collectAsState().value
     val teacherName = viewModel.teacher.collectAsState().value
+    val currentDay = viewModel.currentDay.collectAsState().value
 
     var items by remember {
         mutableStateOf(
@@ -179,13 +179,15 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
                                 item.copy(isSelected = it == j)
                             }
                             filtersTeacher.currentDay = items[it].dayOfTheWeek.toString()
+                            viewModel.onDayChangedTeacher(calendarElementsTeacher[it].day_of_the_week)
+                            Log.d("TeacherTESTTT", "$cafedraTeacher $teacherName $weekTeacher")
 
                             viewModel.viewModelScope.launch(Dispatchers.IO) {
                                 viewModel.sendTeacherFilters(
                                     cafedraTeacher,
                                     teacherName,
                                     weekTeacher,
-                                    calendarElementsTeacher[it].day_of_the_week
+                                    currentDay
                                 )
                             }
                         },
@@ -295,7 +297,7 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
                 ) {
                     Column() {
                         Text(
-                            text = "Фильтры преподавателя",
+                            text = stringResource(id = R.string.filterAuditoryText),
                             color = Color.Black,
                             fontSize = 15.sp
                         )
