@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
@@ -270,19 +271,24 @@ fun GetOutlinedTextField(
     return selectedItem
 }
 
+val currentLang = Locale.current.language
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun localizedCurrentMonth(localDate: Month) = when(localDate){
-    Month.JANUARY -> "ЯНВАРЯ"
-    Month.FEBRUARY -> "ФЕВРАЛЯ"
-    Month.MARCH -> "МАРТА"
-    Month.APRIL -> "АПРЕЛЯ"
-    Month.MAY -> "МАЯ"
-    Month.JUNE -> "ИЮНЯ"
-    Month.JULY -> "ИЮЛЯ"
-    Month.AUGUST -> "АВГУСТА"
-    Month.SEPTEMBER -> "СЕНТЯБРЯ"
-    Month.OCTOBER -> "ОКТЯБРЯ"
-    Month.NOVEMBER -> "НОЯБРЯ"
-    else -> {"ДЕКАБРЯ"}
+
+    Month.JANUARY ->    if(currentLang == "en") "January" else "ЯНВАРЯ"
+    Month.FEBRUARY ->   if(currentLang == "en") "February" else "ФЕВРАЛЯ"
+    Month.MARCH ->      if(currentLang == "en") "March " else "МАРТА"
+    Month.APRIL ->      if(currentLang == "en") "April " else  "АПРЕЛЯ"
+    Month.MAY ->        if(currentLang == "en") "May" else  "МАЯ"
+    Month.JUNE ->       if(currentLang == "en") "June" else  "ИЮНЯ"
+    Month.JULY ->       if(currentLang == "en") "July" else  "ИЮЛЯ"
+    Month.AUGUST ->     if(currentLang == "en") "August" else "АВГУСТА"
+    Month.SEPTEMBER ->  if(currentLang == "en") "September" else "СЕНТЯБРЯ"
+    Month.OCTOBER ->    if(currentLang == "en") "October" else "ОКТЯБРЯ"
+    Month.NOVEMBER ->  if(currentLang == "en") "November" else  "НОЯБРЯ"
+    else -> {
+        if(currentLang == "en") "March " else "ДЕКАБРЯ"
+    }
 }

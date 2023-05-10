@@ -1,6 +1,5 @@
 package com.example.timetable.data.network
 
-import com.example.timetable.data.model.AuditoryByFilter
 import com.example.timetable.data.model.AuditoryFiltersFromAPI
 import com.example.timetable.data.model.Group
 import com.example.timetable.data.model.ResponseAuditoryFilters
@@ -37,16 +36,6 @@ suspend fun sendTeacherFilters(
     @Query("day_of_the_week") chosenDay: String,
 ): Response<List<ResponseTeacherTimeTable>>
 
-@GET("auditory")
-@Headers("Content-Type: application/json")
-suspend fun sendAuditoryFilters(
-    @Query("auditory") auditory: String,
-    @Query("week") week: String,
-    @Query("corpus") corpus: String,
-    @Query("chosenDay") chosenDay: String,
-): Response<List<ResponseAuditoryTimeTable>>
-
-
 @GET("getDaysOfWeek")
 suspend fun getDaysOfWeek(
     @Query("week") week: String
@@ -79,14 +68,22 @@ suspend fun teacherByFilter(
     @Query("cafedra") cafedra: String
 ): Response<List<TeacherFiltersFromAPI>>
 
-// ---------------------------------------Auditory
+// ---------------------------------------Auditory--------------------------------------------------
 @GET("getAllFiltersAuditory")
 suspend fun getAllFiltersAuditory(): Response<List<ResponseAuditoryFilters>>
 
 @GET("auditoryByFilter")
 @Headers("Content-Type: application/json")
 suspend fun auditoryByFilter(
-    @Query("corpus") corpus: String
+    @Query("corps") corps: String
 ): Response<List<AuditoryFiltersFromAPI>>
+
+@GET("auditory")
+@Headers("Content-Type: application/json")
+suspend fun sendAuditoryFilters(
+    @Query("auditory") auditory: String,
+    @Query("week") week: String,
+    @Query("day_of_the_week") chosenDay: String,
+): Response<List<ResponseAuditoryTimeTable>>
 
 }

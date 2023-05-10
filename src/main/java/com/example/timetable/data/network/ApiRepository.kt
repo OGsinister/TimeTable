@@ -12,8 +12,8 @@ suspend fun sendGroupFilters(group: String, day_of_the_week: String, chosenDay: 
 suspend fun sendTeacherFilters(cafedra: String, teacherName: String, week: String, chosenDay: String) =
     apiService.sendTeacherFilters(cafedra, teacherName, week, chosenDay)
 
-suspend fun sendAuditoryFilters(auditory: String,week: String, corpus: String, chosenDay: String) =
-    apiService.sendAuditoryFilters(auditory,week, corpus, chosenDay)
+suspend fun sendAuditoryFilters(auditory: String,week: String, chosenDay: String) =
+    apiService.sendAuditoryFilters(auditory,week, chosenDay)
 
 suspend fun getFilterFacultyCourseWeek() = apiService.getFilterFacultyCourseWeek()
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TimeTable</string>
+
+    <string name = "lab">Лабораторная работа</string>
+    <string name = "practice"> Практика </string>
+    <string name = "army" > ВУЦ </string>
+    <string name = "lecture"> Лекция </string>
+    <string name = "exam"> Экзамен </string>
+
+    <string name="NoInternet" > Проверьте подключение к интернету</string>
+
+    <!-- Group strings /!-->
+    <string name = "OutlinedTextFieldHintFaculty">Choose faculty</string>
+    <string name = "OutlinedTextFieldHintCourse">Choose course</string>
+    <string name = "OutlinedTextFieldHintGroup">Choose group</string>
+    <string name = "OutlinedTextFieldHintWeek">Choose week</string>
+
+    <!-- Teacher strings /!-->
+    <string name = "OutlinedTextFieldHintFacultyTeacher">Choose filter</string>
+    <string name = "OutlinedTextFieldHintCafedraTeacher">Choose cafedra</string>
+    <string name = "OutlinedTextFieldHintTeacher">Choose teacher</string>
+    <string name = "OutlinedTextFieldHintWeekTeacher">Choose week</string>
+
+    <!-- Auditory strings /!-->
+    <string name = "OutlinedTextFieldHintCorpusAuditory">Choose building</string>
+    <string name = "OutlinedTextFieldHintAuditory">Choose auditory</string>
+    <string name = "OutlinedTextFieldHintWeekAuditory">Choose week</string>
+
+
+    <!-- TeacherScreen strings /!-->
+    <string name="Teacher_Name" >Teacher name</string>
+
+    <!-- Toast Errors /!-->
+    <string name="ErrorEmptyFilters">Input filters</string>
+
+    <string name="ButtonText">Change</string>
+
+    <string name="filterText">Group\'s filters</string>
+    <string name="saveButton">Save</string>
+
+    <string name="bottomNavGroup">Group</string>
+    <string name="bottomNavTeacher">Teacher</string>
+    <string name="bottomNavAuditory">Auditory</string>
+
+    <string name="filterAuditoryText">Auditory\'s filters</string>
+    <string name="filterTeacherText">Teacher\'s filters</string>
+
+    <!-- Student default /!-->
+    <string name="defaultGroupValueGroup">PRO-329</string>
+    <string name="defaultFacultyValueGroup">FIRT</string>
+    <string name="defaultWeekValueGroup">3</string>
+    <string name="defaultCourseValueGroup">3</string>
+
+
+</resources>

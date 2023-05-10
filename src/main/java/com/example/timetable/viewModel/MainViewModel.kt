@@ -32,7 +32,7 @@ class MainViewModel @Inject constructor(
 ): ViewModel() {
 
     // Group Filters Save Data
-    val faculty = savedStateHandle.getStateFlow("faculty","ФИРТ")
+    val faculty = savedStateHandle.getStateFlow("faculty", "ФИРТ")
     val course = savedStateHandle.getStateFlow("course","3")
     val week = savedStateHandle.getStateFlow("week","3")
     val group = savedStateHandle.getStateFlow("group","ПРО-329")
@@ -57,12 +57,17 @@ class MainViewModel @Inject constructor(
         savedStateHandle["day"] = NewValue
     }
 
+    val currentLang = androidx.compose.ui.text.intl.Locale.current.language
+    private fun getNameByLocation(locale: String): String{
+        return if(locale == "en") "Don't chosen" else "Не выбран"
+    }
+
     // Teacher Filters Save Data
     val facultyTeacher = savedStateHandle.getStateFlow("facultyTeacher","ФИРТ")
     val cafedraTeacher = savedStateHandle.getStateFlow("cafedraTeacher","ВМиК")
     val weekTeacher = savedStateHandle.getStateFlow("weekTeacher","3")
-    val teacher = savedStateHandle.getStateFlow("teacher","")
-
+    val teacher = savedStateHandle.getStateFlow("teacher",getNameByLocation(currentLang))
+    val currentDayTeacher = savedStateHandle.getStateFlow("dayTeacher","Пн")
     fun onFacultyChangedTeacher(NewValue: String){
         savedStateHandle["facultyTeacher"] = NewValue
     }
@@ -79,11 +84,15 @@ class MainViewModel @Inject constructor(
         savedStateHandle["teacher"] = NewValue
     }
 
-    // Auditory Filters Save Data
-    val auditory = savedStateHandle.getStateFlow("auditory","ФИРТ")
-    val corpusAuditory = savedStateHandle.getStateFlow("corpusAuditory","3")
-    val weekAuditory = savedStateHandle.getStateFlow("weekAuditory","3")
+    fun onDayChangedTeacher(NewValue: String){
+        savedStateHandle["dayTeacher"] = NewValue
+    }
 
+    // Auditory Filters Save Data
+    val auditory = savedStateHandle.getStateFlow("auditory",getNameByLocation(currentLang))
+    val corpusAuditory = savedStateHandle.getStateFlow("corpusAuditory","1")
+    val weekAuditory = savedStateHandle.getStateFlow("weekAuditory","3")
+    val currentDayAuditory = savedStateHandle.getStateFlow("dayAuditory","Пн")
     fun onAuditoryChanged(NewValue: String){
         savedStateHandle["auditory"] = NewValue
     }
@@ -96,6 +105,9 @@ class MainViewModel @Inject constructor(
         savedStateHandle["weekAuditory"] = NewValue
     }
 
+    fun onDayChangedAuditory(NewValue: String){
+        savedStateHandle["dayAuditory"] = NewValue
+    }
 
     val _calendarElements = mutableStateListOf<ResponseDaysOfWeek>()
     val calendarElements: List<ResponseDaysOfWeek> = _calendarElements
@@ -103,6 +115,10 @@ class MainViewModel @Inject constructor(
     fun addElementFromServer(dayOfWeek: ResponseDaysOfWeek){
         _calendarElements.add(dayOfWeek)
         Log.d("titan", "Added elements: ${_calendarElements.last()}")
+    }
+
+    fun addElementFromServerAuditory(dayOfWeek: ResponseDaysOfWeek){
+        _calendarElementsAuditory.add(dayOfWeek)
     }
 
     // Teacher calendar area
@@ -291,13 +307,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun sendAuditoryFilters(auditory: String, corpus: String, week: String, chosenDay: String){
+    fun sendAuditoryFilters(auditory: String, week: String, chosenDay: String){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.sendAuditoryFilters(auditory,corpus, week, chosenDay).let {
+            repository.sendAuditoryFilters(auditory,week, chosenDay).let {
                 if(it.isSuccessful){
                     try {
                         auditoryTimeTable.postValue(it.body())
-                        Log.d("checkssss", "Load ->: ${it.body().toString()}")
+                        Log.d("TimeTableAUDDDDi", "Load ->: ${it.body().toString()}")
                     }catch (e: IOException){
                         Log.d("Error", "Failed to load product: ${e.message.toString()}")
                     }
@@ -356,9 +372,10 @@ class MainViewModel @Inject constructor(
                 if(it.isSuccessful){
                     try {
                         loadedAuditoryFilters.postValue(it.body())
+                        Log.d("checkASS", "Load ->: ${it.body().toString()}")
                     }catch (e: IOException){}
                 }else{
-                    Log.d("ffffff", "Failed to load ...: ${it.errorBody()}")
+                    Log.d("ffffffAudit", "Failed to load ...: ${it.errorBody()}")
                 }
             }
         }
