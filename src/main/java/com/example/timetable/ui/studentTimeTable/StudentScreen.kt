@@ -1,6 +1,8 @@
 package com.example.timetable.ui.studentTimeTable
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
@@ -11,23 +13,37 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.BottomSheetScaffold
+import androidx.compose.material.BottomSheetScaffoldState
 import androidx.compose.material.BottomSheetState
 import androidx.compose.material.BottomSheetValue
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.DrawerDefaults
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.material.rememberBottomSheetState
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.intl.Locale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,9 +53,12 @@ import androidx.navigation.NavHostController
 import com.example.timetable.R
 import com.example.timetable.data.model.CalendarTimeTable
 import com.example.timetable.data.model.Filters
+import com.example.timetable.getErrorEmptyFiltersError
 import com.example.timetable.localizedCurrentMonth
+import com.example.timetable.ui.displayErrors.displayError
 import com.example.timetable.ui.theme.*
 import com.example.timetable.viewModel.MainViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -59,8 +78,10 @@ fun StudentScreen(navController: NavHostController, viewModel: MainViewModel) {
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
 
     BottomSheetScaffold(
+        drawerScrimColor = DrawerDefaults.scrimColor,
         scaffoldState = scaffoldState,
-        drawerShape = RoundedCornerShape(16.dp),
+        sheetGesturesEnabled = true,
+        drawerShape = RoundedCornerShape(size = 16.dp),
         sheetContent = {
             FiltersScreen(
                 navController = navController,
@@ -141,7 +162,10 @@ fun CurrentDateSection(navController: NavController, sheetState: BottomSheetStat
                     }
                 },
             ) {
-                Text(text = stringResource(id = R.string.ButtonText))
+                Text(
+                    text = stringResource(id = R.string.ButtonText),
+                    color = MaterialTheme.colors.background
+                )
             }
         }
     }
@@ -241,9 +265,13 @@ fun WeeklyCalendarSection(viewModel: MainViewModel) {
 @Composable
 fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sheetState: BottomSheetState){
 
+    val context = LocalContext.current
+    val currentLocation = Locale.current
+
     val faculty = viewModel.faculty.collectAsState().value
     val courses = viewModel.course.collectAsState().value
     val weeks = viewModel.week.collectAsState().value
+    val group = viewModel.group.collectAsState().value
 
     var facultyList: List<String> = listOf("Не выбрано")
     var courseList: List<String> = listOf("Не выбрано")
@@ -278,10 +306,18 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
     result.forEach {
         Log.d("checkData", "ID: ${it.startSubject}")
     }
+
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
     ){
+        Column(verticalArrangement = Arrangement.Top) {
+            Icon(
+                painterResource(id = R.drawable.baseline_bottom_white_24),
+                contentDescription = ""
+            )
+        }
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -334,18 +370,23 @@ fun FiltersScreen(navController: NavHostController, viewModel: MainViewModel, sh
             ){
                 Button(
                     onClick = {
-                        viewModel._calendarElements.clear()
-                        viewModel.viewModelScope.launch {
-                            loadedCalendar.forEach { calendar ->
-                                viewModel.addElementFromServer(calendar)
+
+                        if(group != "" && weeks != "" && courses != "" && faculty != ""){
+                            viewModel._calendarElements.clear()
+                            viewModel.viewModelScope.launch {
+                                loadedCalendar.forEach { calendar ->
+                                    viewModel.addElementFromServer(calendar)
+                                }
                             }
+
+                            isCalendarTextVisible.value = true
+
+                            scope.launch {
+                                sheetState.animateTo(BottomSheetValue.Collapsed)
+                            }
+                        }else {
+                            displayError(context, getErrorEmptyFiltersError(currentLocation))
                         }
-
-                        isCalendarTextVisible.value = true
-
-                        scope.launch {
-                            sheetState.collapse()
-                        } //navController.navigate(Screens.STUDENT.route)
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)
                 ) {

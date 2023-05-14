@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,6 +29,7 @@ import androidx.navigation.NavHostController
 import com.example.timetable.R
 import com.example.timetable.data.model.CalendarTimeTable
 import com.example.timetable.data.model.FiltersAuditory
+import com.example.timetable.getErrorEmptyFiltersError
 import com.example.timetable.localizedCurrentMonth
 import com.example.timetable.ui.auditoryTimeTable.AuditoryTimeTableListItem
 import com.example.timetable.ui.auditoryTimeTable.getOutlinedTextFieldAuditory
@@ -73,7 +75,7 @@ fun AuditoryScreen(navController: NavHostController, viewModel: MainViewModel){
                 sheetState = sheetState
             )
         },
-        sheetBackgroundColor = Color.White
+        sheetBackgroundColor = MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier
@@ -99,60 +101,6 @@ fun AuditoryScreen(navController: NavHostController, viewModel: MainViewModel){
         }
     }
 }
-
-/*
-@SuppressLint("UnrememberedMutableState")
-@RequiresApi(Build.VERSION_CODES.O)
-@Composable
-fun DateSection(navController: NavHostController, viewModel: MainViewModel, auditoryName: String) {
-    //var selectedItem by remember { mutableStateOf(auditoryName) }
-    var selectedItem by remember { mutableStateOf(if(auditoryName == "{auditoryName}") "Не выбрано" else auditoryName) }
-
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .padding(20.dp)
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "${LocalDate.now().dayOfMonth} ${localizedCurrentMonth(localDate = LocalDate.now().month)}",
-                style = TextStyle(
-                    color = SubjectsTextColor,
-                    fontSize = 16.sp
-                )
-            )
-            Text(
-                text = selectedItem,
-                style = TextStyle(
-                    color = Color.Black,
-                    fontSize = 30.sp
-                )
-            )
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Button(
-                shape = RoundedCornerShape(50),
-                modifier = Modifier
-                    .height(60.dp),
-                onClick = {
-                    navController.navigate(Screens.AUDITORY_FILTERS.route)
-                },
-            ) {
-                Text(text = "Изменить")
-            }
-        }
-    }
-}
-
-*/
-
 
 @OptIn(ExperimentalMaterialApi::class)
 @SuppressLint("UnrememberedMutableState", "RememberReturnType",
@@ -195,6 +143,7 @@ fun CurrentDateSectionAuditory(navController: NavController, viewModel: MainView
         ) {
             Button(
                 shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                 modifier = Modifier
                     .height(60.dp),
                 onClick = {
@@ -203,7 +152,10 @@ fun CurrentDateSectionAuditory(navController: NavController, viewModel: MainView
                     }
                 },
             ) {
-                Text(text = stringResource(id = R.string.ButtonText))
+                Text(
+                    text = stringResource(id = R.string.ButtonText),
+                    color = MaterialTheme.colors.background
+                )
             }
         }
     }
@@ -307,7 +259,7 @@ fun WeeklyCalendarSectionAuditory(viewModel: MainViewModel) {
 fun AuditoryFiltersScreen(navController: NavController, viewModel: MainViewModel, sheetState: BottomSheetState){
 
     val context = LocalContext.current
-    val filtersMessage = stringResource(id = R.string.ErrorEmptyFilters)
+    val currentLocation = Locale.current
 
     val week = viewModel.weekAuditory.collectAsStateWithLifecycle().value
     val auditory = viewModel.auditory.collectAsStateWithLifecycle().value
@@ -393,16 +345,20 @@ fun AuditoryFiltersScreen(navController: NavController, viewModel: MainViewModel
             ){
                 Button(
                     onClick = {
-                        viewModel._calendarElementsAuditory.clear()
-                        viewModel.viewModelScope.launch {
-                            loadedCalendar.forEach { calendar ->
-                                viewModel.addElementFromServerAuditory(calendar)
+                        if(auditory != "" && week != "" && corpus != ""){
+                            viewModel._calendarElementsAuditory.clear()
+                            viewModel.viewModelScope.launch {
+                                loadedCalendar.forEach { calendar ->
+                                    viewModel.addElementFromServerAuditory(calendar)
+                                }
                             }
-                        }
-                        isCalendarAuditoryTextVisible.value = true
+                            isCalendarAuditoryTextVisible.value = true
 
-                        scope.launch {
-                            sheetState.collapse()
+                            scope.launch {
+                                sheetState.collapse()
+                            }
+                        }else{
+                            displayError(context,getErrorEmptyFiltersError(currentLocation))
                         }
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)

@@ -12,7 +12,8 @@ private val DarkColorPalette = darkColors(
     surface =  ThemeColors.Night.surface,
     background = ThemeColors.Night.background,
     onSecondary = ThemeColors.Night.onSecondary,
-    onSurface = ThemeColors.Night.calendarSelectedItem
+    onSurface = ThemeColors.Night.calendarSelectedItem,
+    primaryVariant = ThemeColors.Night.appNameColor
 )
 
 private val LightColorPalette = lightColors(
@@ -21,7 +22,8 @@ private val LightColorPalette = lightColors(
     surface =  ThemeColors.Light.surface,
     background = ThemeColors.Light.background,
     onSecondary = ThemeColors.Light.onSecondary,
-    onSurface = ThemeColors.Light.calendarSelectedItem
+    onSurface = ThemeColors.Light.calendarSelectedItem,
+    primaryVariant = ThemeColors.Light.appNameColor
 
     /* Other default colors to override
     background = Color.White,

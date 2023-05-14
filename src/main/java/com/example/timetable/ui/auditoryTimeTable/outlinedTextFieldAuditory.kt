@@ -51,36 +51,36 @@ fun getOutlinedTextFieldAuditory(list: List<String>, viewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Gray)
+            .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
             value = auditory,
             onValueChange = {auditory = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray,
-                textColor = MaterialTheme.colors.primary,
-                focusedLabelColor = MaterialTheme.colors.surface,
-                unfocusedLabelColor = MaterialTheme.colors.surface
+                focusedBorderColor = MaterialTheme.colors.onPrimary,
+                unfocusedBorderColor = MaterialTheme.colors.onPrimary,
+                textColor = MaterialTheme.colors.onSecondary,
+                focusedLabelColor = MaterialTheme.colors.onSecondary,
+                unfocusedLabelColor = MaterialTheme.colors.onSecondary
             ),
             modifier = Modifier
                 .height(80.dp)
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.background)
                 .onGloballyPositioned { layoutCoordinates ->
                     textFieldSize = layoutCoordinates.size.toSize()
                 },
             label = {
                 Text(
                     text = stringResource(id = R.string.OutlinedTextFieldHintAuditory),
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colors.onSecondary
                 ) },
             trailingIcon = {
                 Icon(
                     icon,
                     "",
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colors.onSecondary,
                     modifier = Modifier
                         .clickable { expanded = !expanded }
                 )
@@ -91,7 +91,7 @@ fun getOutlinedTextFieldAuditory(list: List<String>, viewModel: MainViewModel) {
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.background)
         ) {
             list.forEach{
                 DropdownMenuItem(onClick = {
@@ -100,7 +100,7 @@ fun getOutlinedTextFieldAuditory(list: List<String>, viewModel: MainViewModel) {
                     viewModel.onAuditoryChanged(selectedItem)
                     expanded = false
                 }) {
-                    Text(text = it, color = MaterialTheme.colors.primary)
+                    Text(text = it, color = MaterialTheme.colors.onSecondary)
                 }
             }
         }
@@ -124,36 +124,36 @@ fun getOutlinedTextFieldCorpus(list: List<String>, viewModel: MainViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Gray)
+            .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
             value = corpus,
             onValueChange = {corpus = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray,
-                textColor = MaterialTheme.colors.primary,
-                focusedLabelColor = MaterialTheme.colors.surface,
-                unfocusedLabelColor = MaterialTheme.colors.surface
+                focusedBorderColor = MaterialTheme.colors.onPrimary,
+                unfocusedBorderColor = MaterialTheme.colors.onPrimary,
+                textColor = MaterialTheme.colors.onSecondary,
+                focusedLabelColor = MaterialTheme.colors.onSecondary,
+                unfocusedLabelColor = MaterialTheme.colors.onSecondary
             ),
             modifier = Modifier
                 .height(80.dp)
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.background)
                 .onGloballyPositioned { layoutCoordinates ->
                     textFieldSize = layoutCoordinates.size.toSize()
                 },
             label = {
                 Text(
                     text = stringResource(id = R.string.OutlinedTextFieldHintCorpusAuditory),
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colors.onSecondary
                 ) },
             trailingIcon = {
                 Icon(
                     icon,
                     "",
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colors.onSecondary,
                     modifier = Modifier
                         .clickable { expanded = !expanded }
                 )
@@ -164,7 +164,7 @@ fun getOutlinedTextFieldCorpus(list: List<String>, viewModel: MainViewModel) {
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.background)
         ) {
             list.forEach{
                 DropdownMenuItem(onClick = {
@@ -172,7 +172,7 @@ fun getOutlinedTextFieldCorpus(list: List<String>, viewModel: MainViewModel) {
                     viewModel.onCorpusChangedAuditory(selectedItem)
                     expanded = false
                 }) {
-                    Text(text = it, color = MaterialTheme.colors.primary)
+                    Text(text = it, color = MaterialTheme.colors.onSecondary)
                 }
             }
         }
@@ -196,36 +196,36 @@ fun getOutlinedTextFieldWeekAuditory(list: List<String>, viewModel: MainViewMode
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Gray)
+            .background(MaterialTheme.colors.background)
     ) {
         OutlinedTextField(
             value = week,
             onValueChange = {week = it},
             readOnly = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color.Gray,
-                unfocusedBorderColor = Color.Gray,
-                textColor = MaterialTheme.colors.primary,
-                focusedLabelColor = MaterialTheme.colors.surface,
-                unfocusedLabelColor = MaterialTheme.colors.surface
+                focusedBorderColor = MaterialTheme.colors.onPrimary,
+                unfocusedBorderColor = MaterialTheme.colors.onPrimary,
+                textColor = MaterialTheme.colors.onSecondary,
+                focusedLabelColor = MaterialTheme.colors.onSecondary,
+                unfocusedLabelColor = MaterialTheme.colors.onSecondary
             ),
             modifier = Modifier
                 .height(80.dp)
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.background)
                 .onGloballyPositioned { layoutCoordinates ->
                     textFieldSize = layoutCoordinates.size.toSize()
                 },
             label = {
                 Text(
                     text = stringResource(id = R.string.OutlinedTextFieldHintWeekAuditory),
-                    color = MaterialTheme.colors.primary
+                    color = MaterialTheme.colors.onSecondary
                 ) },
             trailingIcon = {
                 Icon(
                     icon,
                     "",
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colors.onSecondary,
                     modifier = Modifier
                         .clickable { expanded = !expanded }
                 )
@@ -236,7 +236,7 @@ fun getOutlinedTextFieldWeekAuditory(list: List<String>, viewModel: MainViewMode
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .width(with(LocalDensity.current) { textFieldSize.width.toDp() })
-                .background(MaterialTheme.colors.surface)
+                .background(MaterialTheme.colors.background)
         ) {
             list.forEach{
                 DropdownMenuItem(onClick = {
@@ -244,7 +244,7 @@ fun getOutlinedTextFieldWeekAuditory(list: List<String>, viewModel: MainViewMode
                     viewModel.onWeekChangedAuditory(selectedItem)
                     expanded = false
                 }) {
-                    Text(text = it, color = MaterialTheme.colors.primary)
+                    Text(text = it, color = MaterialTheme.colors.onSecondary)
                 }
             }
         }

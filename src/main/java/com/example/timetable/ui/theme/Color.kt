@@ -47,7 +47,8 @@ sealed class ThemeColors(
     val primary: Color,
     val text: Color,
     val onSecondary: Color,
-    val calendarSelectedItem: Color
+    val calendarSelectedItem: Color,
+    val appNameColor: Color
 ){
     @SuppressLint("InvalidColorHexValue")
     object Night: ThemeColors(
@@ -55,8 +56,9 @@ sealed class ThemeColors(
         surface = Color(0xFF873CC7),
         primary = Color(0xFF6200ed),
         text = Color(0xFF4FB64C),
-        onSecondary = Color(0xffFF473568),
-        calendarSelectedItem = Color(0xFF49b583)
+        onSecondary = Color(0xFFFFFFFF),
+        calendarSelectedItem = Color(0xFF49b583),
+        appNameColor = Color(0xFFFFFFFF)
     )
     @SuppressLint("InvalidColorHexValue")
     object Light: ThemeColors(
@@ -65,7 +67,8 @@ sealed class ThemeColors(
         primary = Color(0xFF6200ed),
         text = Color(0xFF72cfc4),
         onSecondary = Color(0xFF8c8c8c),
-        calendarSelectedItem = Color(0xFF72A5FD)
+        calendarSelectedItem = Color(0xFF72A5FD),
+        appNameColor = Color(0xFF000000)
     )
 }
 

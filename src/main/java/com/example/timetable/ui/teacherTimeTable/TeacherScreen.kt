@@ -17,8 +17,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,7 +29,10 @@ import androidx.navigation.NavController
 import com.example.timetable.R
 import com.example.timetable.data.model.CalendarTimeTable
 import com.example.timetable.data.model.FiltersTeacher
+import com.example.timetable.getErrorEmptyFiltersError
 import com.example.timetable.localizedCurrentMonth
+import com.example.timetable.ui.displayErrors.displayError
+import com.example.timetable.ui.studentTimeTable.isCalendarTextVisible
 import com.example.timetable.ui.theme.SubjectsTextColor
 import com.example.timetable.ui.theme.calendarSelectedItemColor
 import com.example.timetable.viewModel.MainViewModel
@@ -52,12 +57,13 @@ fun TeacherScreen(viewModel: MainViewModel, navController: NavController, teache
     val scaffoldState = rememberBottomSheetScaffoldState(bottomSheetState = sheetState)
 
     BottomSheetScaffold(
+        drawerScrimColor = Color.Black,
         scaffoldState = scaffoldState,
         drawerShape = RoundedCornerShape(10),
         sheetContent = {
             TeacherFiltersScreen(navController = navController, viewModel = viewModel, sheetState = sheetState)
         },
-        sheetBackgroundColor = Color.White
+        sheetBackgroundColor = MaterialTheme.colors.background
     ) {
         Column(
             modifier = Modifier
@@ -104,14 +110,14 @@ fun CurrentDateSectionTeacher(navController: NavController, viewModel: MainViewM
             Text(
                 text = "${LocalDate.now().dayOfMonth} ${localizedCurrentMonth(localDate = LocalDate.now().month)}",
                 style = TextStyle(
-                    color = SubjectsTextColor,
+                    color = MaterialTheme.colors.onSecondary,
                     fontSize = 16.sp
                 )
             )
             Text(
                 text = teacherName,
                 style = TextStyle(
-                    color = Color.Black,
+                    color = MaterialTheme.colors.onPrimary,
                     fontSize = 30.sp
                 )
             )
@@ -123,6 +129,7 @@ fun CurrentDateSectionTeacher(navController: NavController, viewModel: MainViewM
         ) {
             Button(
                 shape = RoundedCornerShape(50),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface),
                 modifier = Modifier
                     .height(60.dp),
                 onClick = {
@@ -131,7 +138,10 @@ fun CurrentDateSectionTeacher(navController: NavController, viewModel: MainViewM
                     }
                 },
             ) {
-                Text(text = "Изменить")
+                Text(
+                    text = stringResource(id = R.string.ButtonText),
+                    color = MaterialTheme.colors.background
+                )
             }
         }
     }
@@ -146,7 +156,7 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
     val cafedraTeacher = viewModel.cafedraTeacher.collectAsState().value
     val weekTeacher = viewModel.weekTeacher.collectAsState().value
     val teacherName = viewModel.teacher.collectAsState().value
-    val currentDay = viewModel.currentDay.collectAsState().value
+    val currentDay = viewModel.currentDayTeacher.collectAsState().value
 
     var items by remember {
         mutableStateOf(
@@ -165,7 +175,7 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
         verticalArrangement = Arrangement.Center
     ) {
         Divider(
-            color = Color.Black
+            color = MaterialTheme.colors.onSecondary
         )
         LazyRow {
             items(items.size) {
@@ -191,7 +201,7 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
                                 )
                             }
                         },
-                    backgroundColor = Color.White
+                    backgroundColor = MaterialTheme.colors.background
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -199,17 +209,17 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
                         if(isCalendarTeacherTextVisible.value){
                             Text(
                                 text = calendarElementsTeacher[it].date,
-                                color = if (items[it].isSelected) calendarSelectedItemColor else SubjectsTextColor
+                                color = if(items[it].isSelected) MaterialTheme.colors.onSurface else MaterialTheme.colors.onSecondary
                             )
                             Text(
                                 text = calendarElementsTeacher[it].day_of_the_week,
-                                color = if (items[it].isSelected) calendarSelectedItemColor else Color.Black
+                                color = if (items[it].isSelected) MaterialTheme.colors.onSurface else MaterialTheme.colors.onSecondary
                             )
                             Divider(
                                 modifier = Modifier
                                     .fillMaxWidth(),
                                 thickness = 2.dp,
-                                color = if (items[it].isSelected) calendarSelectedItemColor else Color.White
+                                color = if (items[it].isSelected) MaterialTheme.colors.onSurface else MaterialTheme.colors.onSecondary
                             )
                         }
                     }
@@ -217,7 +227,7 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
             }
         }
         Divider(
-            color = Color.Black
+            color = MaterialTheme.colors.onSecondary
         )
     }
 }
@@ -227,7 +237,8 @@ fun WeeklyCalendarSectionTeacher(viewModel: MainViewModel) {
 @Composable
 fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel, sheetState: BottomSheetState){
 
-    var context = LocalContext.current
+    val context = LocalContext.current
+    val currentLocation = Locale.current
     var facultyList: List<String> = listOf("Не выбрано")
     var cafedraList: List<String> = listOf("Не выбрано")
     var teacherList: List<String> = listOf("")
@@ -236,6 +247,7 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
     val facultyTeacher = viewModel.facultyTeacher.collectAsState().value
     val cafedraTeacher = viewModel.cafedraTeacher.collectAsState().value
     val weeksTeacher = viewModel.weekTeacher.collectAsState().value
+    val teacherName = viewModel.teacher.collectAsState().value
 
     val scope = rememberCoroutineScope()
 
@@ -250,29 +262,17 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
         viewModel.getFilterFacultyTeacher()
     }
 
-    viewModel.viewModelScope.launch(Dispatchers.IO) {
-        viewModel.getFiltersCafedraWeek(facultyTeacher)
-    }
 
     viewModel.viewModelScope.launch(Dispatchers.IO) {
         viewModel.getDaysOfWeek(weeksTeacher)
-    }
-
-    loadedFacultyTeacherFilter?.forEach {
-        facultyList = it.faculty
-    }
-
-    loadedFilters.forEach{ it ->
-        cafedraList = it.cafedra
-        weekList = it.week
     }
 
     viewModel.viewModelScope.launch(Dispatchers.IO) {
         viewModel.teacherByFilter(facultyTeacher,cafedraTeacher)
     }
 
-    loadedTeacherNames?.forEach {
-        teacherList = it.teacherName
+    loadedFacultyTeacherFilter?.forEach {
+        facultyList = it.faculty
     }
 
     result.forEach {
@@ -280,14 +280,20 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
     }
 
     Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
     ){
+        Column(verticalArrangement = Arrangement.Top) {
+            Icon(
+                painterResource(id = R.drawable.baseline_bottom_white_24),
+                contentDescription = ""
+            )
+        }
         Column(
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize()
                 .padding(30.dp)
         ){
             Column(){
@@ -298,11 +304,28 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
                     Column() {
                         Text(
                             text = stringResource(id = R.string.filterAuditoryText),
-                            color = Color.Black,
+                            color = MaterialTheme.colors.surface,
                             fontSize = 15.sp
                         )
 
                     }
+
+                    if(facultyTeacher != ""){
+                        viewModel.viewModelScope.launch(Dispatchers.IO) {
+                            viewModel.getFiltersCafedraWeek(facultyTeacher)
+                        }
+
+                        loadedFilters.forEach{ it ->
+                            cafedraList = it.cafedra
+                            weekList = it.week
+                        }
+                    }
+
+                    loadedTeacherNames?.forEach {
+                        teacherList = it.teacherName
+                    }
+
+
                     Column(){
                         getOutlinedTextFieldFacultyTeacher(list = facultyList, viewModel = viewModel)
                         //filtersTeacher.faculty = GetOutlinedTextField(facultyList, "Введите факультет", "Faculty", "Teacher")
@@ -327,27 +350,33 @@ fun TeacherFiltersScreen(navController: NavController, viewModel: MainViewModel,
                 }
             }
 
+            Spacer(modifier = Modifier.padding(10.dp))
+
             Column(
                 modifier = Modifier
                     .padding(bottom = 30.dp)
             ){
                 Button(
                     onClick = {
-                        viewModel._calendarElementsTeacher.clear()
-                        viewModel.viewModelScope.launch {
-                            loadedTeacherFromFilters.forEach { calendar ->
-                                viewModel.addElementFromServer(calendar)
+                        if(facultyTeacher != "" && cafedraTeacher != "" && weeksTeacher != "" && teacherName != ""){
+                            viewModel._calendarElementsTeacher.clear()
+                            viewModel.viewModelScope.launch {
+                                loadedTeacherFromFilters.forEach { calendar ->
+                                    viewModel.addElementFromServer(calendar)
+                                }
                             }
-                        }
-                        isCalendarTeacherTextVisible.value = true
+                            isCalendarTeacherTextVisible.value = true
 
-                        scope.launch {
-                            sheetState.collapse()
+                            scope.launch {
+                                sheetState.collapse()
+                            }
+                        }else {
+                            displayError(context, getErrorEmptyFiltersError(currentLocation))
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(Color.Green)
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colors.surface)
                 ) {
-                    Text(text = "Сохранить")
+                    Text(text = stringResource(id = R.string.saveButton))
                 }
             }
         }
