@@ -26,7 +26,6 @@ import com.example.timetable.viewModel.MainViewModel
 @Composable
 fun SetupNavGraph(navController: NavHostController, viewModel: MainViewModel){
     val sheetState = rememberBottomSheetState(initialValue = BottomSheetValue.Expanded)
-
     NavHost(
         navController = navController,
         startDestination = Screens.STUDENT.route

@@ -30,12 +30,13 @@ class MainViewModel @Inject constructor(
     private val repository: ApiRepository,
     private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
+    val currentLangGroup = androidx.compose.ui.text.intl.Locale.current.language
 
     // Group Filters Save Data
-    val faculty = savedStateHandle.getStateFlow("faculty", "ФИРТ")
-    val course = savedStateHandle.getStateFlow("course","3")
-    val week = savedStateHandle.getStateFlow("week","3")
-    val group = savedStateHandle.getStateFlow("group","ПРО-329")
+    val faculty = savedStateHandle.getStateFlow("faculty", "")
+    val course = savedStateHandle.getStateFlow("course","")
+    val week = savedStateHandle.getStateFlow("week","")
+    val group = savedStateHandle.getStateFlow("group","Не выбран")
     val currentDay = savedStateHandle.getStateFlow("day","Пн")
     fun onFacultyChanged(NewValue: String){
         savedStateHandle["faculty"] = NewValue
@@ -59,14 +60,14 @@ class MainViewModel @Inject constructor(
 
     val currentLang = androidx.compose.ui.text.intl.Locale.current.language
     private fun getNameByLocation(locale: String): String{
-        return if(locale == "en") "Don't chosen" else "Не выбран"
+        return if(locale == "ru") "Не выбран" else "Don't chosen"
     }
 
     // Teacher Filters Save Data
-    val facultyTeacher = savedStateHandle.getStateFlow("facultyTeacher","ФИРТ")
-    val cafedraTeacher = savedStateHandle.getStateFlow("cafedraTeacher","ВМиК")
-    val weekTeacher = savedStateHandle.getStateFlow("weekTeacher","3")
-    val teacher = savedStateHandle.getStateFlow("teacher",getNameByLocation(currentLang))
+    val facultyTeacher = savedStateHandle.getStateFlow("facultyTeacher","")
+    val cafedraTeacher = savedStateHandle.getStateFlow("cafedraTeacher","")
+    val weekTeacher = savedStateHandle.getStateFlow("weekTeacher","")
+    val teacher = savedStateHandle.getStateFlow("teacher","Не выбран")
     val currentDayTeacher = savedStateHandle.getStateFlow("dayTeacher","Пн")
     fun onFacultyChangedTeacher(NewValue: String){
         savedStateHandle["facultyTeacher"] = NewValue
@@ -89,9 +90,9 @@ class MainViewModel @Inject constructor(
     }
 
     // Auditory Filters Save Data
-    val auditory = savedStateHandle.getStateFlow("auditory",getNameByLocation(currentLang))
-    val corpusAuditory = savedStateHandle.getStateFlow("corpusAuditory","1")
-    val weekAuditory = savedStateHandle.getStateFlow("weekAuditory","3")
+    val auditory = savedStateHandle.getStateFlow("auditory","Не выбран")
+    val corpusAuditory = savedStateHandle.getStateFlow("corpusAuditory","")
+    val weekAuditory = savedStateHandle.getStateFlow("weekAuditory","")
     val currentDayAuditory = savedStateHandle.getStateFlow("dayAuditory","Пн")
     fun onAuditoryChanged(NewValue: String){
         savedStateHandle["auditory"] = NewValue
